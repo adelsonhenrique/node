@@ -15,9 +15,11 @@ const path = require('path');
 const helmet = require('helmet');
 const csrf = require('csurf');
 const { middlewareGlobal, checkCsrfError, csrfMiddleware } = require('./src/middlewares/middleware'); 
-const { includes } = require('core-js/core/array');
+
+
 app.use(helmet());
 app.use(express.urlencoded({ extended:true }));
+app.use(express.json());
 app.use(express.static(path.resolve(__dirname, 'public')));
 
 const sessionOptions = session({
@@ -40,9 +42,9 @@ app.set('view engine', 'ejs');
 app.use(csrf());
 //Nossos próprios Middlewares
 app.use(middlewareGlobal);
-app.use(routes);
-app.use(csrfMiddleware);
 app.use(checkCsrfError);
+app.use(csrfMiddleware);
+app.use(routes);
 app.on('pronto', () => {
     app.listen(3000, () => {
         console.log('Acessar http://localhost:3000');
